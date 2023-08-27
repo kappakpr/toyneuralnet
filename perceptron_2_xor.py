@@ -58,26 +58,6 @@ class Perceptron:
             self.weights_hi[:,i] = np.add(self.weights_hi[:,i], weight_hi_delta[:,i])
 
 def main():
-    # p1 = Perceptron(2,1, 2)
-    #
-    # inputs = np.array([[1],[0]])
-    # print("inputs \n",inputs,inputs.shape)
-    # targets = np.array([[1]])
-    # print("targets\n",targets,targets.shape)
-    #
-    # results_b = []
-    # results_b = p1.guess(inputs)
-    # print("before training guess... \n",results_b)
-    #
-    # for i in range(30000):
-    #     if (i % 500 == 0):
-    #         print("--------------- new iteration ------------ ", i)
-    #     p1.train(inputs, targets)
-    #
-    # results_b = []
-    # results_b = p1.guess(inputs)
-    # print("After training guess... \n",results_b)
-    #
 
     #initialize perceptron
     p1 = Perceptron(2,1, 4)
