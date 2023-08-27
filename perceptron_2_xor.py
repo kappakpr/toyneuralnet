@@ -58,24 +58,51 @@ class Perceptron:
             self.weights_hi[:,i] = np.add(self.weights_hi[:,i], weight_hi_delta[:,i])
 
 def main():
-    p1 = Perceptron(2,2, 2)
+    # p1 = Perceptron(2,1, 2)
+    #
+    # inputs = np.array([[1],[0]])
+    # print("inputs \n",inputs,inputs.shape)
+    # targets = np.array([[1]])
+    # print("targets\n",targets,targets.shape)
+    #
+    # results_b = []
+    # results_b = p1.guess(inputs)
+    # print("before training guess... \n",results_b)
+    #
+    # for i in range(30000):
+    #     if (i % 500 == 0):
+    #         print("--------------- new iteration ------------ ", i)
+    #     p1.train(inputs, targets)
+    #
+    # results_b = []
+    # results_b = p1.guess(inputs)
+    # print("After training guess... \n",results_b)
+    #
 
-    inputs = np.array([[1],[0]])
-    print("inputs \n",inputs,inputs.shape)
-    targets = np.array([[1],[0]])
-    print("targets\n",targets,targets.shape)
+    #initialize perceptron
+    p1 = Perceptron(2,1, 4)
 
-    results_b = []
-    results_b = p1.guess(inputs)
-    print("before training guess... \n",results_b)
+    inputs = np.array([[[0],[0]],[[0],[1]],[[1],[0]],[[1],[1]]])
+    targets = np.array([[0],[1],[1],[0]])
 
-    for i in range(3000):
-        # print("--------------- new iteration ------------ ", i)
-        p1.train(inputs, targets)
+    print("Before training guesses......")
+    for i in range(4):
+        results_a = []
+        results_a = p1.guess(inputs[i])
+        print("Input \n",inputs[i],"\ntarget ",targets[i]," Before training guess... ",results_a)
 
-    results_b = []
-    results_b = p1.guess(inputs)
-    print("After training guess... \n",results_b)
+    print("----- training ---")
+    for i in range(40000):
+        if (i % 5000 == 0):
+            print("--------------- new iteration ------------ ", i)
+        subscript = np.random.randint(0,4)
+        p1.train(inputs[subscript], targets[subscript])
+
+    print("After training guesses......")
+    for i in range(4):
+        results_a = []
+        results_a = p1.guess(inputs[i])
+        print("Input \n",inputs[i],"\ntarget ",targets[i]," After training guess... ",results_a)
 
 if __name__ == "__main__":
     main()
