@@ -40,6 +40,7 @@ class Perceptron:
         ds_output = self.dsigmoid(output)
         gradient_ho = np.multiply(output_error,ds_output)
         gradient_ho = gradient_ho * self.learning_rate
+        # print(gradient_ho.shape, gradient_ho)
 
         weight_ho_delta = np.dot(gradient_ho,self.hidden_layer.transpose())
         # print("before ",self.hidden_layer.shape,gradient_ho.shape, "\n self.weights_oh \n",self.weights_oh,"\nweight_ho_delta\n",weight_ho_delta)
@@ -60,7 +61,7 @@ class Perceptron:
 def main():
 
     #initialize perceptron
-    p1 = Perceptron(2,1, 4)
+    p1 = Perceptron(2,1, 40)
 
     inputs = np.array([[[0],[0]],[[0],[1]],[[1],[0]],[[1],[1]]])
     targets = np.array([[0],[1],[1],[0]])
@@ -72,7 +73,7 @@ def main():
         print("Input \n",inputs[i],"\ntarget ",targets[i]," Before training guess... ",results_a)
 
     print("----- training ---")
-    for i in range(40000):
+    for i in range(20000):
         if (i % 5000 == 0):
             print("--------------- new iteration ------------ ", i)
         subscript = np.random.randint(0,4)

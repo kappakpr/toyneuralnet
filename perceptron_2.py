@@ -42,11 +42,8 @@ class Perceptron:
         gradient_ho = gradient_ho * self.learning_rate
 
         weight_ho_delta = np.dot(gradient_ho,self.hidden_layer.transpose())
-        # print("before ",self.hidden_layer.shape,gradient_ho.shape, "\n self.weights_oh \n",self.weights_oh,"\nweight_ho_delta\n",weight_ho_delta)
         for i in range(self.weights_oh.shape[1]):
-            # print("i:- ",i,"\nself.weights_oh[:,i]\n",self.weights_oh[:,i],"\nweight_ho_delta[:,i]\n",weight_ho_delta[:,i])
             self.weights_oh[:,i] = np.add(self.weights_oh[:,i], weight_ho_delta[:,i])
-            # print("after self.weights_oh \n", self.weights_oh)
 
         ds_hidden_layer = self.dsigmoid(self.hidden_layer)
         hidden_error = np.dot(self.weights_oh.transpose(), output_error)
@@ -65,18 +62,18 @@ def main():
     targets = np.array([[1],[0]])
     print("targets\n",targets,targets.shape)
 
-    results_b = []
-    results_b = p1.guess(inputs)
-    print("before training guess... \n",results_b)
+    # results_b = []
+    # results_b = p1.guess(inputs)
+    # print("before training guess... \n",results_b)
 
-    for i in range(30000):
+    for i in range(3):
         if (i % 500 == 0):
             print("--------------- new iteration ------------ ", i)
         p1.train(inputs, targets)
 
-    results_b = []
-    results_b = p1.guess(inputs)
-    print("After training guess... \n",results_b)
+    # results_b = []
+    # results_b = p1.guess(inputs)
+    # print("After training guess... \n",results_b)
 
 if __name__ == "__main__":
     main()
