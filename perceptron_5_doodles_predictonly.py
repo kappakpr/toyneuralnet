@@ -2,6 +2,7 @@ import  numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.lines as mlines
 import os
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 class Perceptron:
     weights_hi = []
@@ -30,8 +31,8 @@ class Perceptron:
     def predict(self,inputs):
 
         op_bias = 0.1
-        op_weights_hi = np.loadtxt('op_weights_hi.out')
-        op_weights_oh = np.loadtxt('op_weights_oh.out')
+        op_weights_hi = np.loadtxt('op_weights_hi_4.out')
+        op_weights_oh = np.loadtxt('op_weights_oh_4.out')
 
         hidden_layer = np.add(np.dot(op_weights_hi, inputs),op_bias)
         hidden_layer = self.sigmoid(hidden_layer)
@@ -45,10 +46,11 @@ def main():
 
     samp_size = 10
     cat_class = 0
-    num_classes = 3
+    num_classes = 8
     img_size = 784
     img_size_xy = 28
     max_color = 255
+    cat_class_name = []
 
 
     inputs = np.empty((0,img_size))
@@ -65,26 +67,40 @@ def main():
             x_cat_cls = np.zeros([samp_size,num_classes])
             x_cat_cls[:,cat_class] = 1
             inputs=np.append(inputs,x_data,axis = 0)
-            targets=np.append(targets,x_cat_cls.reshape((samp_size,3)),axis=0)
+            targets=np.append(targets,x_cat_cls.reshape((samp_size,num_classes)),axis=0)
+            cat_class_name = np.append(cat_class_name, [np.char.replace(x,'.npy','')], 0)
             cat_class += 1
 
     train_size = int(.1 * inputs.shape[0])
     print("train_size ",train_size)
     train_idxs=np.random.choice(inputs.shape[0], train_size, replace=False)
-    train_inputs = inputs[train_idxs,:]
-    train_targets = targets[train_idxs]
+    # train_inputs = inputs[train_idxs,:]
+    # train_targets = targets[train_idxs]
     test_inputs = np.delete(inputs,train_idxs,axis=0)
     test_targets = np.delete(targets, train_idxs, axis=0)
 
     p1 = Perceptron(img_size,num_classes, img_size * 4)
 
+    target_class=[]
+    predict_class=[]
+
     for i in range(test_inputs.shape[0]):
         results_a = []
         results_a = p1.predict(test_inputs[i]/max_color)
-        print("Input ",i," target ",np.argmax(test_targets[i]), " ", test_targets[i]," After training guess... ",np.argmax(results_a)," ", results_a)
-        x = test_inputs[i].reshape((img_size_xy, img_size_xy))
-        plt.imshow(x, cmap='gray')
-        plt.show()
+        target_class = np.append(target_class,[np.argmax(test_targets[i])])
+        predict_class = np.append(predict_class,[np.argmax(results_a)])
+        # print("Input ",i," target ",np.argmax(test_targets[i]), " ", test_targets[i]," After training guess... ",np.argmax(results_a)," ", results_a)
+        print("Input ", i, " target ", np.argmax(test_targets[i]), " ", cat_class_name[np.argmax(test_targets[i])] ," guess... ",  np.argmax(results_a), " ", cat_class_name[np.argmax(results_a)], " 2nd best guess.. ", cat_class_name[np.argsort(results_a)[-2]])
+        # if np.argmax(test_targets[i]) != np.argmax(results_a):
+        #     x = test_inputs[i].reshape((img_size_xy, img_size_xy))
+        #     plt.imshow(x, cmap='gray')
+        #     plt.show()
+    print(target_class)
+    print(predict_class)
+    cm=confusion_matrix(target_class, predict_class)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=cat_class_name)
+    disp.plot()
+    plt.show()
 
 if __name__ == "__main__":
     main()

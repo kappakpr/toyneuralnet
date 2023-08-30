@@ -75,12 +75,13 @@ class Perceptron:
 
 def main():
 
-    samp_size = 10000
+    samp_size = 2000
     cat_class = 0
-    num_classes = 3
+    num_classes = 8 #change depending on number of image classes
     img_size = 784
     img_size_xy = 28
     max_color = 255
+    cat_class_name = []
 
 
     inputs = np.empty((0,img_size))
@@ -92,15 +93,17 @@ def main():
 
     for x in os.listdir():
         if x.endswith(".npy"):
+            print("loading file.. ", x)
             all_data = np.load(x)
             x_data = all_data[np.random.choice(all_data.shape[0], samp_size, replace=False), :]
             x_cat_cls = np.zeros([samp_size,num_classes])
             x_cat_cls[:,cat_class] = 1
             inputs=np.append(inputs,x_data,axis = 0)
-            targets=np.append(targets,x_cat_cls.reshape((samp_size,3)),axis=0)
+            targets=np.append(targets,x_cat_cls.reshape((samp_size,num_classes)),axis=0)
+            cat_class_name = np.append(cat_class_name, [np.char.replace(x,'.npy','')], 0)
             cat_class += 1
 
-    train_size = int(.995 * inputs.shape[0])
+    train_size = int(.999 * inputs.shape[0])
     print("train_size ",train_size)
     train_idxs=np.random.choice(inputs.shape[0], train_size, replace=False)
     train_inputs = inputs[train_idxs,:]
@@ -117,25 +120,17 @@ def main():
         op_weights_hi, op_weights_oh, op_bias = p1.train(train_inputs[i]/max_color, train_targets[i])
 
     # np.savetxt('op_bias.out',op_bias)
-    np.savetxt('op_weights_hi.out',op_weights_hi)
-    np.savetxt('op_weights_oh.out',op_weights_oh)
+    np.savetxt('op_weights_hi_4.out',op_weights_hi)
+    np.savetxt('op_weights_oh_4.out',op_weights_oh)
 
-    print("After training guesses......")
-    for i in range(test_inputs.shape[0]):
-        results_a = []
-        results_a = p1.guess(test_inputs[i]/max_color)
-        print("Input ",i," target ",np.argmax(test_targets[i]), " ", test_targets[i]," After training guess... ",np.argmax(results_a)," ", results_a)
-        x = test_inputs[i].reshape((img_size_xy, img_size_xy))
-    #     plt.imshow(x, cmap='gray')
-    #     plt.show()
-    #
+    # print("After training guesses......")
     # for i in range(test_inputs.shape[0]):
     #     results_a = []
-    #     results_a = p1.predict(test_inputs[i]/max_color)
+    #     results_a = p1.guess(test_inputs[i]/max_color)
     #     print("Input ",i," target ",np.argmax(test_targets[i]), " ", test_targets[i]," After training guess... ",np.argmax(results_a)," ", results_a)
-    #     x = test_inputs[i].reshape((img_size_xy, img_size_xy))
-    #     plt.imshow(x, cmap='gray')
-    #     plt.show()
+        # x = test_inputs[i].reshape((img_size_xy, img_size_xy))
+        # plt.imshow(x, cmap='gray')
+        # plt.show()
 
 if __name__ == "__main__":
     main()
